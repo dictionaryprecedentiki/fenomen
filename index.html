@@ -269,6 +269,140 @@
             .dictionary-header h2 { font-size: 1.6rem; }
             .sayings-grid { grid-template-columns: 1fr; }
         }
+            /* ===== УЛУЧШЕННАЯ АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ ===== */
+    @media (max-width: 768px) {
+        /* Общие отступы */
+        body {
+            padding: 10px;
+        }
+        .content {
+            padding: 15px 18px !important;
+        }
+        /* Заголовок */
+        .cover {
+            min-height: 180px;
+        }
+        .description {
+            padding: 18px 20px;
+            margin-bottom: 25px;
+        }
+        .description p {
+            font-size: 0.95rem;
+        }
+        /* Кнопка фильтров */
+        .filter-toggle {
+            width: 100%;
+            justify-content: center;
+            padding: 12px;
+            font-size: 1rem;
+        }
+        /* Панель фильтров */
+        .filter-panel {
+            padding: 15px;
+        }
+        .filter-group {
+            max-height: 200px;
+            gap: 8px;
+        }
+        .filter-group label {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+        .filter-actions button {
+            padding: 8px 20px;
+        }
+        /* Поиск */
+        .search-input {
+            padding: 12px 16px;
+            font-size: 1rem;
+        }
+        .result-count {
+            font-size: 0.75rem;
+            text-align: center;
+        }
+        /* Заголовок словаря */
+        .dictionary-header h2 {
+            font-size: 1.6rem;
+        }
+        /* Карточки – одна колонка, увеличенные отступы */
+        .sayings-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .card-quote {
+            font-size: 1.2rem;
+            padding: 15px 15px 8px 15px;
+            margin: 0 10px 8px 10px;
+        }
+        .card-context {
+            font-size: 0.85rem;
+            padding: 0 15px 10px 15px;
+        }
+        .details-btn {
+            padding: 10px 18px;
+            font-size: 0.9rem;
+        }
+        /* Модальное окно – на весь экран */
+        .modal-content {
+            width: 95%;
+            max-height: 90vh;
+            padding: 20px;
+            border-radius: 20px;
+        }
+        .modal-content h3 {
+            font-size: 1.4rem;
+            padding-right: 30px;
+        }
+        .modal-content h4 {
+            font-size: 1.1rem;
+        }
+        .modal-content p, .modal-content div {
+            font-size: 0.9rem;
+        }
+        .close-modal {
+            font-size: 28px;
+            top: 12px;
+            right: 16px;
+        }
+        /* Тема (кнопка) */
+        .theme-switch-wrapper {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .theme-toggle {
+            padding: 6px 14px;
+            font-size: 0.85rem;
+        }
+        /* Копирайт */
+        .copyright {
+            font-size: 0.7rem;
+            margin-top: 25px;
+        }
+    }
+
+    /* Очень маленькие экраны (ширина до 480px) */
+    @media (max-width: 480px) {
+        .content {
+            padding: 12px 12px !important;
+        }
+        .dictionary-header h2 {
+            font-size: 1.3rem;
+        }
+        .card-quote {
+            font-size: 1.1rem;
+        }
+        .filter-group label {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+        }
+        .vk-link {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+        .description p {
+            font-size: 0.85rem;
+        }
+    }
     </style>
 </head>
 <body>
@@ -2400,6 +2534,16 @@ if (themeToggleBtn) {
             btn.textContent = isLight ? '🌙 Тёмная тема' : '🌞 Светлая тема';
         });
     })();
+        // Закрытие панели фильтров при клике вне её
+    document.addEventListener('click', function(event) {
+        const panel = document.getElementById('filterPanel');
+        const toggleBtn = document.getElementById('filterToggleBtn');
+        if (panel && panel.classList.contains('show')) {
+            if (!panel.contains(event.target) && !toggleBtn.contains(event.target)) {
+                panel.classList.remove('show');
+            }
+        }
+    });
 </script>
 </body>
 </html>
