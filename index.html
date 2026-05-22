@@ -417,7 +417,7 @@ body.light-mode #sortPanel label {
     background: #e0e0e0;
     color: #111;
 }
-            /* ========== ВЕРСИЯ ДЛЯ СЛАБОВИДЯЩИХ ========== */
+    /* ========== ВЕРСИЯ ДЛЯ СЛАБОВИДЯЩИХ ========== */
     body.vision-mode {
         font-size: 1.2rem;
         line-height: 1.6;
@@ -445,7 +445,6 @@ body.light-mode #sortPanel label {
         font-size: 1.1rem;
         padding: 12px 20px;
     }
-    /* Увеличенный контраст для тёмной темы */
     body.vision-mode .site-wrapper {
         border-width: 4px;
     }
@@ -454,17 +453,6 @@ body.light-mode #sortPanel label {
         background: #111;
         border-color: #ff6666;
     }
-    /* Для светлой темы при включённом режиме слабовидящих */
-    body.light-mode.vision-mode .description,
-    body.light-mode.vision-mode .saying-card {
-        background: #fff;
-        border-color: #cc0000;
-        color: #000;
-    }
-    body.light-mode.vision-mode .card-context {
-        color: #222;
-    }
-    /* Убираем тени и лишние эффекты */
     body.vision-mode .saying-card:hover {
         transform: none;
         box-shadow: 0 0 0 2px #ff6666;
@@ -472,6 +460,62 @@ body.light-mode #sortPanel label {
     body.vision-mode .details-btn:hover {
         background: #800020;
         box-shadow: none;
+    }
+
+    /* ===== ИСПРАВЛЕНИЕ ДЛЯ СВЕТЛОЙ ТЕМЫ + РЕЖИМ СЛАБОВИДЯЩИХ ===== */
+    body.light-mode.vision-mode {
+        background-color: #ffffff;
+        color: #000000;
+    }
+    body.light-mode.vision-mode .site-wrapper {
+        background-color: #ffffff;
+        border: 4px solid #cc0000;
+    }
+    body.light-mode.vision-mode .description {
+        background-color: #f0f0f0;
+        color: #000000;
+        border-left-color: #cc0000;
+    }
+    body.light-mode.vision-mode .saying-card {
+        background-color: #f5f5f5 !important;
+        border: 2px solid #cc0000;
+        color: #000000;
+    }
+    body.light-mode.vision-mode .card-quote {
+        background-color: #e8e8e8 !important;
+        color: #990000;
+        border-left-color: #cc0000;
+    }
+    body.light-mode.vision-mode .card-context {
+        color: #222222;
+    }
+    body.light-mode.vision-mode .details-btn {
+        border-color: #cc0000;
+        color: #cc0000;
+    }
+    body.light-mode.vision-mode .details-btn:hover {
+        background-color: #cc0000;
+        color: white;
+    }
+    body.light-mode.vision-mode .search-input {
+        background-color: #ffffff;
+        border-color: #cc0000;
+        color: #000000;
+    }
+    body.light-mode.vision-mode .filter-panel {
+        background-color: #f0f0f0;
+        border-color: #cc0000;
+    }
+    body.light-mode.vision-mode .filter-group label {
+        background-color: #e0e0e0;
+        color: #000000;
+    }
+    body.light-mode.vision-mode .copyright {
+        color: #555555;
+        border-top-color: #cccccc;
+    }
+    body.light-mode.vision-mode .result-count {
+        color: #333333;
     }
     </style>
 </head>
