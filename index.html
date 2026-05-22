@@ -2378,19 +2378,8 @@ body.light-mode #sortPanel label {
             <h4>📊 Статистика узнаваемости</h4>
             <div>${percent}% опрошенных знают это выражение</div>
             <div class="stat-bar"><div class="stat-fill" style="width: ${percent}%;"></div></div>
-            <button id="shareQuoteBtn" style="background: #800020; color: white; border: none; padding: 8px 16px; border-radius: 30px; margin-top: 15px; cursor: pointer;">📤 Поделиться</button>
         `;
         modal.style.display = "flex";
-        
-        // Добавляем обработчик для кнопки поделиться (после того как кнопка создана)
-        const shareBtn = document.getElementById("shareQuoteBtn");
-        if (shareBtn) {
-            shareBtn.addEventListener("click", () => {
-                // Формируем текст для копирования
-                const shareText = `«${s.quote}» — ${s.authorWork}\n\nЗначение: ${s.meaning}\n\nИсточник: Активный словарь прецедентных высказываний`;
-                copyToClipboard(shareText);
-            });
-        }
     }
 
     function escapeHtml(str) {
@@ -2624,8 +2613,18 @@ if (themeToggleBtn) {
             <h4>📊 Статистика узнаваемости</h4>
             <div>${percent}% опрошенных знают это выражение</div>
             <div class="stat-bar"><div class="stat-fill" style="width: ${percent}%;"></div></div>
+            <button id="shareQuoteBtn" style="background: #800020; color: white; border: none; padding: 8px 16px; border-radius: 30px; margin-top: 15px; cursor: pointer;">📤 Поделиться</button>
         `;
         modal.style.display = 'flex';
+        // Добавляем обработчик для кнопки поделиться (после того как кнопка создана)
+        const shareBtn = document.getElementById("shareQuoteBtn");
+        if (shareBtn) {
+            shareBtn.addEventListener("click", () => {
+                // Формируем текст для копирования
+                const shareText = `«${s.quote}» — ${s.authorWork}\n\nЗначение: ${s.meaning}\n\nИсточник: Активный словарь прецедентных высказываний`;
+                copyToClipboard(shareText);
+            });
+        }
     }
 
     function escapeHtml(str) {
