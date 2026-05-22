@@ -2378,8 +2378,18 @@ body.light-mode #sortPanel label {
             <h4>📊 Статистика узнаваемости</h4>
             <div>${percent}% опрошенных знают это выражение</div>
             <div class="stat-bar"><div class="stat-fill" style="width: ${percent}%;"></div></div>
+            <button id="shareQuoteBtn" style="background: #800020; color: white; border: none; padding: 8px 16px; border-radius: 30px; margin-top: 15px; cursor: pointer;">📤 Поделиться</button>
         `;
         modal.style.display = "flex";
+        // Добавляем обработчик для кнопки поделиться (после того как кнопка создана)
+        const shareBtn = document.getElementById("shareQuoteBtn");
+        if (shareBtn) {
+            shareBtn.addEventListener("click", () => {
+                // Формируем текст для копирования
+                const shareText = `«${s.quote}» — ${s.authorWork}\n\nЗначение: ${s.meaning}\n\nИсточник: Активный словарь прецедентных высказываний`;
+                copyToClipboard(shareText);
+            });
+        }
     }
 
     function escapeHtml(str) {
@@ -2841,6 +2851,51 @@ if (themeToggleBtn) {
             lastRandomIndex = newIndex;
             showModal(sayingsData[newIndex]);
         });
+    }
+        // Функция копирования текста в буфер обмена с уведомлением
+    function copyToClipboard(text) {
+        // Создаём временное текстовое поле
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        
+        // Показываем уведомление
+        showNotification('✅ Высказывание скопировано в буфер обмена!');
+    }
+    
+    // Функция показа временного уведомления
+    function showNotification(message) {
+        // Создаём элемент уведомления
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #800020;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            z-index: 2000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+        `;
+        document.body.appendChild(notification);
+        
+        // Анимация появления
+        setTimeout(() => { notification.style.opacity = '1'; }, 10);
+        
+        // Удаляем через 2 секунды
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 300);
+        }, 2000);
     }
 </script>
 </body>
