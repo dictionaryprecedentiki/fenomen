@@ -517,6 +517,31 @@ body.light-mode #sortPanel label {
     body.light-mode.vision-mode .result-count {
         color: #333333;
     }
+        #randomQuoteBtn {
+    background-color: #800020;
+    color: white;
+    border: 1px solid #ff9999;
+}
+#randomQuoteBtn:hover {
+    background-color: #a00028;
+    transform: scale(1.02);
+}
+        #randomQuoteBtn {
+    background-color: #800020;
+    border-color: #ff9999;
+}
+#randomQuoteBtn:hover {
+    background-color: #a00028;
+    transform: scale(1.02);
+}
+        #randomQuoteBtn {
+    background-color: #800020;
+    border-color: #ff9999;
+}
+#randomQuoteBtn:hover {
+    background-color: #a00028;
+    transform: scale(1.02);
+}
     </style>
 </head>
 <body>
@@ -535,8 +560,13 @@ body.light-mode #sortPanel label {
             <a href="https://vk.com/precedentiki" class="vk-link" target="_blank">📱 Наше сообщество ВКонтакте →</a>
         </div>
 
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
         <button id="filterToggleBtn" class="filter-toggle">🎛️ Фильтры</button>
-        <button id="sortToggleBtn" class="filter-toggle" style="margin-left: 10px;">📊 Сортировка</button>
+        <button id="sortToggleBtn" class="filter-toggle">📊 Сортировка</button>
+    </div>
+    <button id="randomQuoteBtn" class="filter-toggle" style="background-color: #800020; color: white;">🎲 Случайная цитата</button>
+</div>
 <div id="sortPanel" class="filter-panel">
     <div class="filter-section">
         <h4>Сортировать высказывания по:</h4>
@@ -2785,6 +2815,31 @@ if (themeToggleBtn) {
             const isVisionOn = document.body.classList.contains('vision-mode');
             localStorage.setItem(visionModeKey, isVisionOn ? 'on' : 'off');
             visionBtn.textContent = isVisionOn ? '👁️ Обычная версия' : '👁️ Версия для слабовидящих';
+        });
+    }
+        // ========== СЛУЧАЙНАЯ ЦИТАТА ==========
+    const randomBtn = document.getElementById('randomQuoteBtn');
+    
+    if (randomBtn) {
+        randomBtn.addEventListener('click', () => {
+            // Выбираем случайную цитату из всего массива
+            const randomIndex = Math.floor(Math.random() * sayingsData.length);
+            const randomQuote = sayingsData[randomIndex];
+            
+            // Показываем в модальном окне
+            showModal(randomQuote);
+        });
+    }
+        let lastRandomIndex = -1;
+    if (randomBtn) {
+        randomBtn.addEventListener('click', () => {
+            if (!sayingsData || sayingsData.length === 0) return;
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * sayingsData.length);
+            } while (newIndex === lastRandomIndex && sayingsData.length > 1);
+            lastRandomIndex = newIndex;
+            showModal(sayingsData[newIndex]);
         });
     }
 </script>
