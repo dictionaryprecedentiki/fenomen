@@ -417,14 +417,71 @@ body.light-mode #sortPanel label {
     background: #e0e0e0;
     color: #111;
 }
+            /* ========== ВЕРСИЯ ДЛЯ СЛАБОВИДЯЩИХ ========== */
+    body.vision-mode {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        letter-spacing: 0.5px;
+    }
+    body.vision-mode .card-quote {
+        font-size: 1.5rem;
+        font-weight: bold;
+        background: #000;
+        color: #ffdb9f;
+    }
+    body.vision-mode .card-context,
+    body.vision-mode .meaning,
+    body.vision-mode .usage,
+    body.vision-mode .modal-content p,
+    body.vision-mode .description p {
+        font-size: 1.1rem;
+        line-height: 1.5;
+    }
+    body.vision-mode .details-btn {
+        font-size: 1rem;
+        padding: 10px 22px;
+    }
+    body.vision-mode .search-input {
+        font-size: 1.1rem;
+        padding: 12px 20px;
+    }
+    /* Увеличенный контраст для тёмной темы */
+    body.vision-mode .site-wrapper {
+        border-width: 4px;
+    }
+    body.vision-mode .description,
+    body.vision-mode .saying-card {
+        background: #111;
+        border-color: #ff6666;
+    }
+    /* Для светлой темы при включённом режиме слабовидящих */
+    body.light-mode.vision-mode .description,
+    body.light-mode.vision-mode .saying-card {
+        background: #fff;
+        border-color: #cc0000;
+        color: #000;
+    }
+    body.light-mode.vision-mode .card-context {
+        color: #222;
+    }
+    /* Убираем тени и лишние эффекты */
+    body.vision-mode .saying-card:hover {
+        transform: none;
+        box-shadow: 0 0 0 2px #ff6666;
+    }
+    body.vision-mode .details-btn:hover {
+        background: #800020;
+        box-shadow: none;
+    }
     </style>
 </head>
 <body>
 <div class="site-wrapper">
     <div class="cover"></div>
     <div class="content">
-        <div class="theme-switch-wrapper">
-            <button id="themeToggle" class="theme-toggle">🌞 Светлая тема</button>
+<div class="theme-switch-wrapper" style="text-align: right; margin-bottom: 15px;">
+    <button id="themeToggle" class="theme-toggle">🌞 Светлая тема</button>
+    <button id="visionToggle" class="theme-toggle" style="margin-left: 10px;">👁️ Версия для слабовидящих</button>
         </div>
         <div class="description">
             <p>✨ <strong>Добро пожаловать на наш сайт!</strong><br>
@@ -2667,6 +2724,25 @@ if (themeToggleBtn) {
 
     // Если вы хотите, чтобы сортировка применялась сразу при выборе радиокнопки (без кнопки "Применить"),
     // то можно добавить обработчики на радиокнопки. Но кнопка "Применить" удобнее.
+        // ========== ВЕРСИЯ ДЛЯ СЛАБОВИДЯЩИХ ==========
+    const visionBtn = document.getElementById('visionToggle');
+    const visionModeKey = 'visionMode';
+    
+    // Проверяем сохранённое состояние
+    const savedVision = localStorage.getItem(visionModeKey);
+    if (savedVision === 'on') {
+        document.body.classList.add('vision-mode');
+        if (visionBtn) visionBtn.textContent = '👁️ Обычная версия';
+    }
+    
+    if (visionBtn) {
+        visionBtn.addEventListener('click', () => {
+            document.body.classList.toggle('vision-mode');
+            const isVisionOn = document.body.classList.contains('vision-mode');
+            localStorage.setItem(visionModeKey, isVisionOn ? 'on' : 'off');
+            visionBtn.textContent = isVisionOn ? '👁️ Обычная версия' : '👁️ Версия для слабовидящих';
+        });
+    }
 </script>
 </body>
 </html>
