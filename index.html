@@ -541,7 +541,36 @@ body.light-mode #sortPanel label {
 #randomQuoteBtn:hover {
     background-color: #a00028;
     transform: scale(1.02);
-}
+}    .dictionary-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .pdf-export-btn {
+        background: #1e1e1e;
+        border: 1px solid #800020;
+        color: #ffffff;
+        padding: 6px 12px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+    .pdf-export-btn:hover {
+        background: #800020;
+        color: white;
+    }
+    body.light-mode .pdf-export-btn {
+        background: #e0e0e0;
+        color: #111;
+    }
+    body.light-mode .pdf-export-btn:hover {
+        background: #800020;
+        color: white;
+    }
     </style>
 </head>
 <body>
@@ -604,6 +633,7 @@ body.light-mode #sortPanel label {
 
         <div class="dictionary-header">
             <h2>📖 Активный словарь прецедентных высказываний</h2>
+                <button id="exportDocBtn" class="pdf-export-btn">📄 Скачать</button>
         </div>
         <div class="search-container">
             <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск по фразе, контексту, значению, ситуациям или автору...">
@@ -2896,6 +2926,162 @@ if (themeToggleBtn) {
             notification.style.opacity = '0';
             setTimeout(() => notification.remove(), 300);
         }, 2000);
+    }
+        // ========== ЭКСПОРТ В WORD ==========
+    const exportDocBtn = document.getElementById('exportDocBtn');
+    if (exportDocBtn) {
+        exportDocBtn.addEventListener('click', () => {
+            if (!sayingsData || sayingsData.length === 0) {
+                alert('Нет данных для экспорта');
+                return;
+            }
+            
+            // Сортируем данные по алфавиту (как на сайте)
+                       let filteredData = [...sayingsData];
+            
+            // Фильтр по авторам (если переменная selectedAuthors существует)
+            if (typeof selectedAuthors !== 'undefined' && selectedAuthors && selectedAuthors.length > 0) {
+                filteredData = filteredData.filter(item => {
+                    let full = item.authorWork;
+                    let commaIndex = full.indexOf(',');
+                    let lastName = (commaIndex > 0) ? full.substring(0, commaIndex).trim() : full;
+                    let authorFull = (typeof getAuthorFullName === 'function') ? getAuthorFullName(lastName) : lastName;
+                    return selectedAuthors.includes(authorFull);
+                });
+            }
+            
+            // Фильтр по произведениям
+            if (typeof selectedWorks !== 'undefined' && selectedWorks && selectedWorks.length > 0) {
+                filteredData = filteredData.filter(item => selectedWorks.includes(item.authorWork));
+            }
+            
+            // Поиск
+            if (typeof searchText !== 'undefined' && searchText && searchText !== "") {
+                const low = searchText.toLowerCase();
+                filteredData = filteredData.filter(item =>
+                    item.quote.toLowerCase().includes(low) ||
+                    (item.contextShort && item.contextShort.toLowerCase().includes(low)) ||
+                    (item.fullContext && item.fullContext.toLowerCase().includes(low)) ||
+                    (item.meaning && item.meaning.toLowerCase().includes(low)) ||
+                    (item.usage && item.usage.toLowerCase().includes(low)) ||
+                    item.authorWork.toLowerCase().includes(low)
+                );
+            }
+            
+            // Сортировка по текущему типу
+            if (typeof currentSortType !== 'undefined') {
+                if (currentSortType === "alphabet") {
+                    filteredData.sort((a,b) => a.quote.toLowerCase().localeCompare(b.quote.toLowerCase()));
+                } else if (currentSortType === "recognition_asc") {
+                    filteredData.sort((a,b) => (a.recognitionStat || 0) - (b.recognitionStat || 0));
+                } else if (currentSortType === "recognition_desc") {
+                    filteredData.sort((a,b) => (b.recognitionStat || 0) - (a.recognitionStat || 0));
+                }
+            } else {
+                filteredData.sort((a,b) => a.quote.toLowerCase().localeCompare(b.quote.toLowerCase()));
+            }
+            
+            const sortedData = filteredData;
+            
+            // Формируем HTML для Word
+            const currentDate = new Date().toLocaleDateString('ru-RU');
+            const docHtml = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Активный словарь прецедентных высказываний</title>
+                    <style>
+                        body {
+                            font-family: 'Times New Roman', serif;
+                            font-size: 12pt;
+                            line-height: 1.4;
+                            margin: 2cm;
+                        }
+                        h1 {
+                            font-size: 24pt;
+                            text-align: center;
+                            margin-bottom: 5px;
+                        }
+                        .subtitle {
+                            text-align: center;
+                            font-size: 14pt;
+                            font-style: italic;
+                            margin-bottom: 20px;
+                            color: #555;
+                        }
+                        .info {
+                            display: flex;
+                            justify-content: space-between;
+                            font-size: 10pt;
+                            border-bottom: 1px solid #aaa;
+                            padding-bottom: 5px;
+                            margin-bottom: 20px;
+                        }
+                        .card {
+                            margin-bottom: 20px;
+                            padding-bottom: 15px;
+                            border-bottom: 1px solid #ccc;
+                            page-break-inside: avoid;
+                        }
+                        .quote {
+                            font-size: 14pt;
+                            font-weight: bold;
+                            font-style: italic;
+                            color: #800020;
+                            margin-bottom: 5px;
+                        }
+                        .author {
+                            font-weight: bold;
+                            margin-bottom: 8px;
+                        }
+                        .context, .meaning, .usage {
+                            margin-bottom: 5px;
+                            text-align: justify;
+                        }
+                        .label {
+                            font-weight: bold;
+                        }
+                        .stat {
+                            margin-top: 5px;
+                            color: #2c5e2c;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>Активный словарь прецедентных высказываний</h1>
+                    <div class="subtitle">на материале драматургии XIX века</div>
+                    <div class="info">
+                        <span>Дата выгрузки: ${currentDate}</span>
+                        <span>Всего высказываний: ${sortedData.length}</span>
+                    </div>
+                    ${sortedData.map(item => `
+                        <div class="card">
+                            <div class="quote">«${item.quote.replace(/</g, '&lt;').replace(/>/g, '&gt;')}»</div>
+                            <div class="author">${item.authorWork.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                            <div class="context"><span class="label">Контекст:</span> ${(item.fullContext || item.contextShort).replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                            <div class="meaning"><span class="label">Значение:</span> ${item.meaning.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                            <div class="usage"><span class="label">Употребление:</span> ${item.usage.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                            <div class="stat"><span class="label">Узнаваемость:</span> ${item.recognitionStat || 0}%</div>
+                        </div>
+                    `).join('')}
+                </body>
+                </html>
+            `;
+            
+            // Создаём Blob с типом application/msword
+            const blob = new Blob([docHtml], { type: 'application/msword' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = `slovar_precedentov_${currentDate.replace(/\./g, '-')}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Файл Word успешно сохранён!');
+        });
     }
 </script>
 </body>
