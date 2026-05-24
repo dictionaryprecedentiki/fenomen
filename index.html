@@ -2621,7 +2621,7 @@ if (themeToggleBtn) {
         if (shareBtn) {
             shareBtn.addEventListener("click", () => {
                 // Формируем текст для копирования
-                const shareText = `«${s.quote}» — ${s.authorWork}\n\nЗначение: ${s.meaning}\n\nИсточник: Активный словарь прецедентных высказываний`;
+                const shareText = `«${s.quote}» — ${s.authorWork}\n\nЗначение: ${s.meaning}\n\nИсточник: Активный словарь прецедентных высказываний\nhttps://dictionaryprecedentiki.github.io/fenomen/`;
                 copyToClipboard(shareText);
             });
         }
